@@ -39,6 +39,7 @@ class BooksCollector:
             if name not in self.favorites:
                 self.favorites.append(name)
 
+
     # удаляем книгу из Избранного
     def delete_book_from_favorites(self, name):
         if name in self.favorites:
