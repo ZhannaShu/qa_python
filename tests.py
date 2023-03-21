@@ -90,8 +90,6 @@ class TestBooksCollector:
         book_name = 'Три поросёнка'
         collector.add_new_book(book_name)
         collector.add_book_in_favorites(book_name)
-        #assert book_name in collector.favorites
-        #print(collector.favorites)
         assert collector.favorites == ['Три поросёнка']
 
     def test_add_book_to_favorites_book_add_to_favorites_twice_cannot_be(self):
