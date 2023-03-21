@@ -34,53 +34,65 @@ class TestBooksCollector:
 
     def test_add_new_book_add_one_book_true(self):
         collector = BooksCollector()
-        collector.add_new_book('Три поросёнка')
-        assert len(collector.get_books_rating()) == 1
+        book_name = 'Три поросёнка'
+        collector.add_new_book(book_name)
+        assert collector.books_rating[book_name] == 1
 
     def test_add_new_book_check_rating_of_the_add_book_true(self):
         collector = BooksCollector()
         collector.add_new_book('Три поросёнка')
-        assert collector.books_rating == {'Три поросёнка': 1}
+        assert collector.books_rating['Три поросёнка'] == 1
 
     def test_add_new_book_cannot_add_book_twice_true(self):
         collector = BooksCollector()
         collector.add_new_book('Три поросёнка')
         collector.add_new_book('Три поросёнка')
-        assert len(collector.get_books_rating()) == 1
+        assert collector.books_rating == {'Три поросёнка': 1}
 
     def test_set_book_rating_cant_set_rating_less_than_one_error(self):
         collector = BooksCollector()
-        collector.add_new_book('Три поросёнка')
-        collector.set_book_rating('Три поросёнка', 0)
-        assert 'Три поросёнка' in collector.books_rating and collector.books_rating['Три поросёнка'] != 0
+        book_name = 'Три поросёнка'
+        collector.add_new_book(book_name)
+        collector.set_book_rating(book_name, 0)
+        assert collector.books_rating[book_name] == 1
 
     def test_get_book_rating_book_rating_by_name(self):
         collector = BooksCollector()
         collector.add_new_book('Три поросёнка')
-        assert collector.get_book_rating('Три поросёнка') == 1
+        assert collector.get_book_rating('Три поросёнка') == collector.books_rating['Три поросёнка']
 
     def test_get_book_rating_no_book_no_rating(self):
         collector = BooksCollector()
         book_name = 'Три поросёнка'
-        assert collector.get_book_rating(book_name) != range(1, 11)
+        assert collector.get_book_rating(book_name) == None
 
     def test_get_books_with_specific_rating_list_books_specified_rating(self):
         collector = BooksCollector()
         collector.add_new_book('Три поросёнка')
+        collector.add_new_book('Красная шапочка')
+        collector.add_new_book('Колобок')
         collector.set_book_rating('Три поросёнка', 7)
-        assert collector.get_books_with_specific_rating(7) == ['Три поросёнка']
+        collector.set_book_rating('Красная шапочка', 7)
+        assert collector.get_books_with_specific_rating(7) == ['Три поросёнка', 'Красная шапочка']
 
     def test_get_books_rating_get_current_dict_true(self):
         collector = BooksCollector()
         collector.add_new_book('Три поросёнка')
-        assert collector.get_books_rating() == {'Три поросёнка': 1}
+        collector.add_new_book('Красная шапочка')
+        collector.add_new_book('Колобок')
+
+        collector.set_book_rating('Три поросёнка', 7)
+        collector.set_book_rating('Красная шапочка', 7)
+        assert collector.get_books_rating() == {'Три поросёнка': 7, 'Красная шапочка': 7, 'Колобок': 1}
 
     def test_add_book_in_favorites_book_add_to_favorites_true(self):
         collector = BooksCollector()
         book_name = 'Три поросёнка'
         collector.add_new_book(book_name)
         collector.add_book_in_favorites(book_name)
-        assert book_name in collector.favorites
+        #assert book_name in collector.favorites
+        #print(collector.favorites)
+        assert collector.favorites == ['Три поросёнка']
 
     def test_add_book_to_favorites_book_add_to_favorites_twice_cannot_be(self):
         collector = BooksCollector()
@@ -88,22 +100,27 @@ class TestBooksCollector:
         collector.add_new_book(book_name)
         collector.add_book_in_favorites(book_name)
         collector.add_book_in_favorites(book_name)
-        assert len(collector.favorites) == 1
+        assert collector.favorites.count(book_name) == 1
 
     def test_delete_book_from_favorites_book_remove_from_favorites(self):
         collector = BooksCollector()
         book_name = 'Три поросёнка'
         collector.add_new_book(book_name)
+        collector.add_new_book('Колобок')
         collector.add_book_in_favorites(book_name)
+        collector.add_book_in_favorites('Колобок')
         collector.delete_book_from_favorites(book_name)
-        assert book_name not in collector.favorites
+        assert collector.favorites.count(book_name) == 0
 
     def test_get_list_of_favorites_books_list_favorite_books_true(self):
         collector = BooksCollector()
-        book_name = 'Три поросёнка'
-        collector.add_new_book(book_name)
-        collector.add_book_in_favorites(book_name)
-        assert collector.get_list_of_favorites_books() == [book_name]
+        collector.add_new_book('Три поросёнка')
+        collector.add_new_book('Красная шапочка')
+        collector.add_new_book('Колобок')
+
+        collector.add_book_in_favorites('Красная шапочка')
+        collector.add_book_in_favorites('Колобок')
+        assert collector.get_list_of_favorites_books() == ['Красная шапочка', 'Колобок']
 
 
 
